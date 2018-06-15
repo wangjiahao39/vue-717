@@ -6,7 +6,7 @@ module.exports = function (app){
     const goodsPath = path.resolve(__dirname+'/goodslist')
     app.get('/api/index/recommend.action',(req,res)=>{
         //console.log(req.query)
-        if(req.query>5){
+        if(req.query.page*1>5){
             res.json({
                 code:1000,
                 msg:'没有更多数据了'
@@ -27,10 +27,44 @@ module.exports = function (app){
         })
     })
 
+    //注册接口
+    app.post('/api/user/register',(req,res)=>{
+        console.log(req.body)
+        let userpath = path.resolve(__dirname+'/user')
+        let userlist = JSON.parse(fs.readFileSync(userpath+'/userlist.json','utf-8'))
+        console.log(userlist)
+        if(userlist.some(element => {
+            return element.username == req.body.username
+        })){
+            res.json({
+                msg:'failed',
+                imfo:'该用户已存在',
+                code:1
+            })
+            return
+        }
+        userlist.push(req.body)
+        fs.writeFile(userpath+'/userlist.json',JSON.stringify(userlist),function(err){
+            if(err){
+                res.json({
+                    msg:err,
+                    code:0
+                }) 
+            }else{
+                res.json({
+                    msg:'success',
+                    code:1
+                })
+            }
+        })
+    })
     //登录接口
     app.post('/api/user/login',(req,res)=>{
         console.log(req.headers)
         console.log(req.body)
-        res.end('1')
+        res.json({
+            msg:'success',
+            code:1
+        })
     })
 }

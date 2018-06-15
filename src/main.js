@@ -11,6 +11,8 @@ import http from './utils/request'
 import LazyLoad from 'vue-lazyload'
 //引用vuex
 import Store from './store/store'
+//引用验证组件
+import VueLidate from 'vuelidate'
 
 Vue.config.productionTip = false
 Vue.config.devtools = false
@@ -18,6 +20,7 @@ Vue.use(http)
 Vue.use(LazyLoad,{
   loading:'/src/assets/images/loading2.gif'
 })
+Vue.use(VueLidate)
 
 new Vue({
   el: '#app',

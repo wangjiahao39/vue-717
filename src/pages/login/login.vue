@@ -1,14 +1,43 @@
 <template>
     <div class="register">
         <h2>登录717<span>注册</span></h2>
-        <p><label for="username">用户名</label><input type="text" id="sername"></p>
-        <p><label for="password">密码</label><input type="password" id="password"></p>
-        <button>登录</button>
+        <p><label for="username">用户名</label><input type="text" id="sername" v-model="username"></p>
+        <p><label for="password">密码</label><input type="password" id="password" v-model="password"></p>
+        <button @click="goToRegister">登录</button>
     </div>
 </template>
 <script>
 export default {
-    
+    data(){
+        return {
+            username:'',
+            password:''
+        }
+    },
+    methods:{
+        goToRegister(){
+            let regPhone = /^1[3578]\d{9}$/;
+            if(!regPhone.test(this.username)){
+                alert('手机号输入错误')
+                return
+            }
+            let regPassword = /\d{6,}/
+            if(!regPassword.test(this.password)){
+                alert('密码格式输入错误')
+                return
+            }
+            if(!this.username || !this.password){
+                alert('信息不能为空')
+                return
+            }
+            this.$http.post('/api/user/login',{
+                username:this.username,
+                password:this.password
+            }).then(res=>{
+                console.log(res)
+            })
+        }
+    }
 }
 </script>
 <style>

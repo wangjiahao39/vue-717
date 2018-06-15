@@ -3,11 +3,12 @@
         <h2>注册717<span>登录</span></h2>
         <p><label for="username">用户名</label><input type="text" id="username" v-model="username" placeholder="请输入手机号"></p>
         <p><label for="password">密码</label><input type="password" v-model="password" placeholder="请输入4位以上的字符串"></p>
-        <p><label for="password">确认密码</label><input id="password" v-model="passwords" placeholder="再次输入密码"></p>
+        <p><label for="password">确认密码</label><input type="password" v-model="passwords" placeholder="再次输入密码"></p>
         <button @click="goToRegister">注册</button>
     </div>
 </template>
 <script>
+import {required} from 'vuelidate'
 export default {
     data(){
         return {
@@ -23,11 +24,31 @@ export default {
                 alert('手机号输入错误')
                 return
             }
+            let regPassword = /\d{6,}/
+            if(!regPassword.test(this.password)){
+                alert('密码格式输入错误')
+                return
+            }
+            if(this.password!==this.passwords){
+                alert('与上次密码不符')
+                return
+            }
             if(!this.username || !this.password || !this.passwords){
                 alert('信息不能为空')
                 return
             }
             
+            this.$http.post('/api/user/register',{
+                username:this.username,
+                password:this.password
+            }).then(res=>{
+                console.log(res)
+                if(res.code==1){
+                    this.$router.push({
+                        name:'login'
+                    })
+                }
+            })
         }
     }
 }

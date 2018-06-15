@@ -98,7 +98,7 @@ export default {
                     }else{
                         this.list = [...this.list,...JSON.parse(JSON.parse(res).recommend).wareInfoList];
                     }
-                    this.canIQuery = true;5
+                    this.canIQuery = true;
                 })
             }
         }

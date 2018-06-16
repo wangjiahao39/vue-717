@@ -9,8 +9,7 @@ const onlineUrl = 'http:m.jd.com'
 let httpInstance = axios.create({
     headers:{
         //'Content-Type':'application/x-www-form-urlencoded',
-        'Content-Type':'application/json',
-        'Authorization':'123'
+        'Content-Type':'application/json'
     },
     baseURL:process.env.NODE_ENV==='development'?testUrl:onlineUrl
 })

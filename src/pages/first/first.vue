@@ -92,7 +92,7 @@ export default {
             if(docH-winH-scrollH<30 && this.canIQuery){
                 this.page++;
                 this.canIQuery = false;
-                this.$http(`/index/recommend.action?page=${this.page}`).then(res=>{
+                this.$http(`/api/index/recommend.action?page=${this.page}`).then(res=>{
                     if(res.code===1000){
                         this.tips = '我是有底线的'
                     }else{

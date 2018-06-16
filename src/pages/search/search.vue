@@ -17,7 +17,7 @@ export default {
     },
     methods:{
         search(){
-            this.$http.get(`https://m.gome.com.cn/index.php?ctl=index&act=keywordsPromptNew&keystr=${this.keywords}&dotime=1529047209000`).then(res=>{
+            this.$http.get(`https://m.gome.com.cn/index.php?ctl=index&act=keywordsPromptNew&keystr=${this.keywords}&dotime=1528960286000`).then(res=>{
                 this.htmls = res
             })
         }

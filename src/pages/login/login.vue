@@ -1,9 +1,9 @@
 <template>
     <div class="register">
-        <h2>登录717<span>注册</span></h2>
+        <h2>登录717<span @click="goregister">注册</span></h2>
         <p><label for="username">用户名</label><input type="text" id="sername" v-model="username"></p>
         <p><label for="password">密码</label><input type="password" id="password" v-model="password"></p>
-        <button @click="goToRegister">登录</button>
+        <button @click="goToLogin">登录</button>
     </div>
 </template>
 <script>
@@ -15,7 +15,7 @@ export default {
         }
     },
     methods:{
-        goToRegister(){
+        goToLogin(){
             let regPhone = /^1[3578]\d{9}$/;
             if(!regPhone.test(this.username)){
                 alert('手机号输入错误')
@@ -34,9 +34,19 @@ export default {
                 username:this.username,
                 password:this.password
             }).then(res=>{
-                console.log(res)
+                if(res.code == 1){
+                    document.cookie = `token=${res.token}`
+                }
+            })
+        },
+        goregister(){
+            this.$router.push({
+                name:'register'
             })
         }
+    },
+    mounted(){
+        console.log(this.$route)
     }
 }
 </script>

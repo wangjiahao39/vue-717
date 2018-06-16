@@ -1,7 +1,7 @@
 <template>
     <div class="classify">
         <div class="classify-top">
-            <input type="text" @click="gotoSearch" placeholder="输入您要购买的商品">
+            <input type="text" @click="goToSearch" placeholder="输入您要购买的商品">
             <i class="iconfont icon-xiaoxizhongxin"></i>
         </div>
         <div class="classify-count">
@@ -65,7 +65,7 @@ export default {
             this.code = id
             this.$store.dispatch('fetchList',id)
         },
-        gotoSearch(){
+        goToSearch(){
             this.$router.push({
                 name:'search'
             })

@@ -10,6 +10,7 @@ import First from '../pages/first/first'
 import Classify from '../pages/classify/classify'
 import Shopcar from '../pages/shopcar/shopcar'
 import Mine from '../pages/mine/mine'
+import {getCookie} from '../utils/utils'
 
 Vue.use(Router)
 
@@ -62,4 +63,17 @@ let router = new Router({
     ]
 })
 
+router.beforeEach((to,from,next)=>{
+    console.log(to)
+    if(to.name=="mine" || to.name=="shopcar"){
+        let token = getCookie('token')
+        if(!token){
+            next({name:'login',query:{from:to.name}})
+        }else{
+            next()
+        }
+    }else{
+        next()
+    }
+})
 export default router

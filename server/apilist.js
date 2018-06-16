@@ -1,5 +1,7 @@
 const fs = require('fs')
 const path = require('path')
+const jwt = require('jsonwebtoken')
+console.log(jwt)
 //定义接口
 module.exports = function (app){
     //首页商品列表的接口
@@ -60,11 +62,12 @@ module.exports = function (app){
     })
     //登录接口
     app.post('/api/user/login',(req,res)=>{
-        console.log(req.headers)
         console.log(req.body)
+        let token = jwt.sign(req.body,'1601E')
         res.json({
             msg:'success',
-            code:1
+            code:1,
+            token
         })
     })
 }

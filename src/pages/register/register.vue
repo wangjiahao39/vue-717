@@ -1,6 +1,6 @@
 <template>
     <div class="register">
-        <h2>注册717<span>登录</span></h2>
+        <h2>注册717<span @click="gologin">登录</span></h2>
         <p><label for="username">用户名</label><input type="text" id="username" v-model="username" placeholder="请输入手机号"></p>
         <p><label for="password">密码</label><input type="password" v-model="password" placeholder="请输入4位以上的字符串"></p>
         <p><label for="password">确认密码</label><input type="password" v-model="passwords" placeholder="再次输入密码"></p>
@@ -48,6 +48,11 @@ export default {
                         name:'login'
                     })
                 }
+            })
+        },
+        gologin(){
+            this.$router.push({
+                name:'login'
             })
         }
     }

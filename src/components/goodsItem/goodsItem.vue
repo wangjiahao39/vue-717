@@ -5,7 +5,7 @@
             <p>{{data.wname}}</p>
             <p>
                 <span>{{data.jdPrice}}</span>
-                <span class="iconfont icon-caigou-xianxing"></span>
+                <span @click.stop="addcar" class="iconfont icon-caigou-xianxing"></span>
             </p>
         </dd>
     </dl>

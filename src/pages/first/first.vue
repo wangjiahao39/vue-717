@@ -117,7 +117,7 @@ export default {
         this.$http.post(`/api/user/login`,{
             name:'jacky'
         }).then(res=>{
-            console.log(res)
+            
         })
         // jsonp(this.url,'mtopjsonp2').then((res)=>{
         //     console.log(res.data)

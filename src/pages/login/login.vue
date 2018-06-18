@@ -7,6 +7,7 @@
     </div>
 </template>
 <script>
+import {setCookie} from '../../utils/utils.js'
 export default {
     data(){
         return {
@@ -35,7 +36,13 @@ export default {
                 password:this.password
             }).then(res=>{
                 if(res.code == 1){
-                    document.cookie = `token=${res.token}`
+                    setCookie('token',res.token)
+                    //document.cookie = `token=${res.token}`
+                    this.$router.push({
+                        name:this.$route.query.from || 'home'
+                    })
+                }else{
+                    console.log(res.msg)
                 }
             })
         },

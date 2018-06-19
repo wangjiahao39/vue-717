@@ -64,7 +64,7 @@ let router = new Router({
 })
 
 router.beforeEach((to,from,next)=>{
-    console.log(to)
+    //console.log(to)
     if(to.name=="mine" || to.name=="shopcar"){
         let token = getCookie('token')
         if(!token){

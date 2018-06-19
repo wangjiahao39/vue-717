@@ -114,11 +114,11 @@ export default {
         this.$http(`/api/index/recommend.action?page=${this.page}`).then(res=>{
             this.list = JSON.parse(JSON.parse(res).recommend).wareInfoList
         });
-        this.$http.post(`/api/user/login`,{
-            name:'jacky'
-        }).then(res=>{
+        // this.$http.post(`/api/user/login`,{
+        //     name:'jacky'
+        // }).then(res=>{
             
-        })
+        // })
         // jsonp(this.url,'mtopjsonp2').then((res)=>{
         //     console.log(res.data)
         //     this.data = res.data

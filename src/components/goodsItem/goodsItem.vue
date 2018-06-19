@@ -5,12 +5,13 @@
             <p>{{data.wname}}</p>
             <p>
                 <span>{{data.jdPrice}}</span>
-                <span @click.stop="addcar" class="iconfont icon-caigou-xianxing"></span>
+                <span @click.stop="addCar" class="iconfont icon-caigou-xianxing"></span>
             </p>
         </dd>
     </dl>
 </template>
 <script>
+import {getCookie} from '../../utils/utils'
 export default {
     props:{
         data:{
@@ -19,6 +20,20 @@ export default {
         }
     },
     methods:{
+        addCar(){
+            this.$http.post('/api/addCar',{
+                token:getCookie('token'),
+                data:this.data
+            }).then(res=>{
+                if(res.code===0){
+                    this.$router.push({
+                        name:'login'
+                    })
+                }else{
+                    console.log(res.msg)
+                }
+            })
+        },
         goToDetail(){
             this.$router.push({
                 name:'detail',

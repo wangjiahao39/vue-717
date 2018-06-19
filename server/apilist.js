@@ -71,7 +71,7 @@ module.exports = function (app) {
             }
         })
         if (flag) {
-            let token = jwt.sign(req.body, '1601E', { expiresIn: 60 })
+            let token = jwt.sign(req.body, '1601E', { expiresIn: 60*60 })
             res.json({
                 msg: 'success',
                 code: 1,
@@ -98,6 +98,46 @@ module.exports = function (app) {
                 res.json({
                     msg: 'success',
                     code: 1
+                })
+            }
+        })
+    })
+    //添加购物车
+    app.post('/api/addCar',(req,res)=>{
+        console.log(req.body)
+        if(!req.body.token){
+            res.json({
+                msg:'参数错误，必传字段，token缺失',
+                code:2
+            })
+            return
+        }
+        jwt.verify(req.body.token,'1601E',(err,decoded)=>{
+            if(err){
+                res.json({
+                    msg:'登录超时，请重新登陆',
+                    code:'0'
+                })
+            }else{
+                const carpath = __dirname+'/shoplist/shoplist.json'
+                let shoplist = JSON.parse(fs.readFileSync(carpath,'utf-8'))
+                if(shoplist[decoded.username]){
+                    shoplist[decoded.username].push(req.body.data)
+                }else{
+                    shoplist[decoded.username] = [req.body.data];
+                }
+                fs.writeFile(carpath,JSON.stringify(shoplist),(err)=>{
+                    if(err){
+                        res.json({
+                            msg:'写入错误',
+                            code:'0'
+                        })
+                    }else{
+                        res.json({
+                            msg:'添加成功',
+                            code:1
+                        })
+                    }
                 })
             }
         })

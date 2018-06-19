@@ -1,5 +1,4 @@
 # 717
-项目总结
 
 ``` bash
 # install dependencies
@@ -11,5 +10,5 @@ npm run dev
 # build for production with minification
 npm run build
 ```
-
-1.整个项目使用vue框架完成搭建
+ 项目总结
+ 1.整个项目使用vue框架完成搭建

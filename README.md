@@ -1,8 +1,5 @@
 # 717
-
-> A Vue.js project
-
-## Build Setup
+项目总结
 
 ``` bash
 # install dependencies
@@ -15,4 +12,4 @@ npm run dev
 npm run build
 ```
 
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+1.整个项目使用vue框架完成搭建

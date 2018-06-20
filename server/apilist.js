@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const jwt = require('jsonwebtoken')
+const root = path.resolve(__dirname)
 console.log(jwt)
 //定义接口
 module.exports = function (app) {
@@ -95,16 +96,17 @@ module.exports = function (app) {
                 })
             } else {
                 console.log(decoded)
+                let goods = JSON.parse(fs.readFileSync(__dirname+'/shoplist/shoplist.json','utf-8'))
                 res.json({
                     msg: 'success',
-                    code: 1
+                    code: 1,
+                    data:goods[decoded.username]
                 })
             }
         })
     })
     //添加购物车
     app.post('/api/addCar',(req,res)=>{
-        console.log(req.body)
         if(!req.body.token){
             res.json({
                 msg:'参数错误，必传字段，token缺失',
@@ -122,10 +124,60 @@ module.exports = function (app) {
                 const carpath = __dirname+'/shoplist/shoplist.json'
                 let shoplist = JSON.parse(fs.readFileSync(carpath,'utf-8'))
                 if(shoplist[decoded.username]){
-                    shoplist[decoded.username].push(req.body.data)
+                    let flag = false;//判断商品是否存在
+                    shoplist[decoded.username].forEach((item,index)=>{
+                        if(item.wname==req.body.data.wname){
+                            ++item.count
+                            flag = true
+                        }
+                    })
+                    if(!flag){
+                        let o = {
+                            ...req.body.data,
+                            count:1
+                        }
+                        shoplist[decoded.username].push(o)
+                    }
                 }else{
-                    shoplist[decoded.username] = [req.body.data];
+                    shoplist[decoded.username] = [{count:1,...req.body.data}];
                 }
+                fs.writeFile(carpath,JSON.stringify(shoplist),(err)=>{
+                    if(err){
+                        res.json({
+                            msg:'写入错误',
+                            code:'0'
+                        })
+                    }else{
+                        res.json({
+                            msg:'添加成功',
+                            code:1
+                        })
+                    }
+                })
+            }
+        })
+    })
+    //修改购物车数量
+    app.get('/api/shopcar/count',(req,res)=>{
+        if(!req.body.token){
+            res.json({
+                msg:'参数错误，必传字段，token缺失',
+                code:2
+            })
+            return
+        }
+        jwt.verify(req.body.token,'1601E',(err,decoded)=>{
+            if(err){
+                res.json({
+                    msg:'登录超时，请重新登陆',
+                    code:'0'
+                })
+            }else{
+                const carpath = __dirname+'/shoplist/shoplist.json'
+                let shoplist = JSON.parse(fs.readFileSync(carpath,'utf-8'))
+                
+
+                
                 fs.writeFile(carpath,JSON.stringify(shoplist),(err)=>{
                     if(err){
                         res.json({

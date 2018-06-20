@@ -21,14 +21,18 @@ export default {
     },
     methods:{
         addCar(){
+            if(!getCookie('token')){
+                this.$router.push({
+                    name:'login'
+                })
+                return
+            }
             this.$http.post('/api/addCar',{
                 token:getCookie('token'),
                 data:this.data
             }).then(res=>{
-                if(res.code===0){
-                    this.$router.push({
-                        name:'login'
-                    })
+                if(res.code===1){
+                    console.log('添加成功')
                 }else{
                     console.log(res.msg)
                 }

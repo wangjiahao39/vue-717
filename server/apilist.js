@@ -95,12 +95,11 @@ module.exports = function (app) {
                     code: 0
                 })
             } else {
-                console.log(decoded)
                 let goods = JSON.parse(fs.readFileSync(__dirname+'/shoplist/shoplist.json','utf-8'))
                 res.json({
                     msg: 'success',
                     code: 1,
-                    data:goods[decoded.username]
+                    data:goods[decoded.username] || []
                 })
             }
         })
@@ -157,9 +156,10 @@ module.exports = function (app) {
             }
         })
     })
-    //修改购物车数量
-    app.get('/api/shopcar/count',(req,res)=>{
+    //删除购物车
+    app.post('/api/shopcar/del',(req,res)=>{
         if(!req.body.token){
+            res.status(304)
             res.json({
                 msg:'参数错误，必传字段，token缺失',
                 code:2
@@ -175,8 +175,25 @@ module.exports = function (app) {
             }else{
                 const carpath = __dirname+'/shoplist/shoplist.json'
                 let shoplist = JSON.parse(fs.readFileSync(carpath,'utf-8'))
-                
-
+                let goodslist = shoplist[decoded.username]
+                //操作数据库
+                let delindex = []
+                goodslist = goodslist.forEach((item,index)=>{
+                    req.body.goodsname.forEach((v,i)=>{
+                        if(item.wname == v){
+                            delindex.push(index)
+                        }
+                    })
+                })
+                for(let i=0;i<goodslist.length;i++){
+                    for(let j=0;j<delindex.length;j++){
+                        if(i==delindex[j]){
+                            goodslist.splice(i,1);
+                        }
+                    }
+                }
+                goodslist.splice(delindex,1)
+                shoplist[decoded.username] = goodslist
                 
                 fs.writeFile(carpath,JSON.stringify(shoplist),(err)=>{
                     if(err){
@@ -186,7 +203,52 @@ module.exports = function (app) {
                         })
                     }else{
                         res.json({
-                            msg:'添加成功',
+                            msg:'删除成功',
+                            code:1
+                        })
+                    }
+                })
+            }
+        })
+    })
+    //修改购物车数量
+    app.post('/api/shopcar/count',(req,res)=>{
+        if(!req.body.token){
+            res.status(304)
+            res.json({
+                msg:'参数错误，必传字段，token缺失',
+                code:2
+            })
+            return
+        }
+        jwt.verify(req.body.token,'1601E',(err,decoded)=>{
+            if(err){
+                res.json({
+                    msg:'登录超时，请重新登陆',
+                    code:'0'
+                })
+            }else{
+                const carpath = __dirname+'/shoplist/shoplist.json'
+                let shoplist = JSON.parse(fs.readFileSync(carpath,'utf-8'))
+                let goodslist = shoplist[decoded.username]
+                //操作数据库
+                goodslist = goodslist.map((item,index)=>{
+                    if(item.wname == req.body.goodsname){
+                        item.count = req.body.count
+                    }
+                    return item
+                })
+                shoplist[decoded.username] = goodslist
+                
+                fs.writeFile(carpath,JSON.stringify(shoplist),(err)=>{
+                    if(err){
+                        res.json({
+                            msg:'写入错误',
+                            code:'0'
+                        })
+                    }else{
+                        res.json({
+                            msg:'修改成功',
                             code:1
                         })
                     }

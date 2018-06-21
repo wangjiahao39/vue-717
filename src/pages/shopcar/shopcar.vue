@@ -2,66 +2,129 @@
     <div class="shopcar">
 		<div class='shop-head'>
 			<h1>购物车</h1>
-			<span class="bianji">编辑</span>
+			<span class="bianji" @click="editFunc">{{edit}}</span>
 		</div>
 		<div class='main'>
-			<div class="list" v-show="data.length==0">
+			<div class="list" v-show="$store.state.shopList.length==0">
 				你的购物车还是空的！
 			</div>
-			<Goodsitem v-for="(val,index) in data" :key="index" :data="val"></Goodsitem>
+			<Goodsitem v-on:update="fetchList" v-for="(val,index) in $store.state.shopList" :key="index" :data="val"></Goodsitem>
 		</div>
 		<div class="shop-bottom">
 			<div class="bottomLeft">
-				<input type="checkbox">
+				<span :class="checkedClass" @click="selectedAll"></span>
 				<span>全选</span>
 			</div>
 			<div class="bottomRight">
 				<div class="allPrice">
-					<span>合计<b>$0</b></span><br>
+					<span>合计<b>${{total}}</b></span><br>
 					<span>(运费：￥0)</span>
 				</div>
 				<div class="numPrice">
-					<button>结算</button>
+					<button @click="deleat">{{type}}</button>
 				</div>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
-import {getCookie} from '../../utils/utils.js'
+import {getCookie,bus} from '../../utils/utils.js'
 import Goodsitem from './goodsitem.vue'
 export default {
     data(){
         return{
-            data:[],
-            count:1
+			data:[],
+			flag:false,
+			list:{
+
+			},
+			total:0,
+			type:'结算',
+			edit:'编辑'
         }
-    },
+	},
+	computed:{
+		checkedClass(){
+			let str = 'iconfont '
+			return this.flag?str+'icon-danxuankuangyixuanzhong':str+'icon-radiobt_1'
+		}
+	},
     created(){
-        //请求购物车列表
-        this.$http.post('/api/goodslist',{
-            token:getCookie('token')
-        }).then(res=>{
-            if(res.code==0){
-                if((confirm('登录超时，请重新登陆'))){
-                    this.$router.push({
-                        name:'login',
-                        query:{
-                            from:'shopcar'
-                        }
-                    })
-                }else{
-                    
-                }
-            }else{
-                this.data = res.data
-            }
-        })
-    },
+		//this.fetchList()
+		this.$store.dispatch('fetchShoplist')
+	},
+	mounted(){
+		// bus.$on('update',()=>{
+		// 	console.log('update')
+		// 	this.fetchList()
+		// })
+		//从来都没有this.$on的写法
+		bus.$on('goodsCheaked',(data)=>{
+			console.log(data)
+			this.list[data.name] = data.price
+			this.sumup()
+		})
+	},
     methods:{
-        decrement(){
-            this.count--;
-        }
+		fetchList(){
+			//请求购物车列表
+			this.$http.post('/api/goodslist',{
+				token:getCookie('token')
+			}).then(res=>{
+				if(res.code==0){
+					if((confirm('登录超时，请重新登陆'))){
+						this.$router.push({
+							name:'login',
+							query:{
+								from:'shopcar'
+							}
+						})
+					}else{
+						
+					}
+				}else{
+					this.data = res.data
+				}
+			})
+		},
+		sumup(){
+			this.total =  Object.values(this.list).reduce((init,item)=>{
+				return init+item
+			},0)
+		},
+		selectedAll(){
+			this.flag = !this.flag
+			bus.$emit('selected-all',this.flag)
+		},
+		editFunc(){
+			if(this.edit == '编辑'){
+				this.type = '删除'
+				this.edit = '完成'
+			}else{
+				this.type = '结算'
+				this.edit = '编辑'
+			}
+		},
+		deleat(){
+			if(this.type == '结算'){
+				//跳转支付平台
+			}else{
+				if(confirm('您确定要删除吗？')){
+					let arr = []
+					for(let i in this.list){
+						if(this.list[i]!=0){
+							arr.push(i)
+						}
+					}
+					this.$http.post('/api/shopcar/del',{
+						token:getCookie('token'),
+						goodsname:arr
+					}).then(res=>{
+						console.log(res)
+					})
+				}
+			}
+		}
     },
     components:{
         Goodsitem

@@ -1,3 +1,4 @@
+import Vue from 'vue'
 /**
  * 获取对应名称的cookie
  * @param name cookie的名称
@@ -28,6 +29,10 @@ var setCookie = function (name, value, day) {
     }
 };
 
+let bus = new Vue({
+
+})
+
 /**
  * 删除cookie
  * @param name cookie的名称
@@ -36,4 +41,4 @@ var delCookie = function (name) {
     setCookie(name, ' ', -1);
 };
 
-export { getCookie, setCookie, delCookie }
+export { getCookie, setCookie, delCookie, bus }

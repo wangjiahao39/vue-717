@@ -57,11 +57,12 @@
             </div>
             <ul class="first-content" ref="list">
                 <li v-for="(item,index) in list" :key="index">
-                    <GoodsItem :data='item'></GoodsItem>
+                    <GoodsItem :data='item' :instance="$refs.addCartSuc"></GoodsItem>
                 </li>
             </ul>
-            <p class="tips">{{tips}}</p>
+            <p class="tipss">{{tipss}}</p>
         </div>
+        <Toast ref="addCartSuc"></Toast>
     </div>
 </template>
 <script>
@@ -76,7 +77,7 @@ export default {
             list:[],
             canIQuery:true,
             page:1,
-            tips:'正在加载数据...'
+            tipss:'正在加载数据...'
         }
     },
     methods:{
@@ -94,7 +95,7 @@ export default {
                 this.canIQuery = false;
                 this.$http(`/api/index/recommend.action?page=${this.page}`).then(res=>{
                     if(res.code===1000){
-                        this.tips = '我是有底线的'
+                        this.tipss = '我是有底线的'
                     }else{
                         this.list = [...this.list,...JSON.parse(JSON.parse(res).recommend).wareInfoList];
                     }
@@ -209,5 +210,8 @@ export default {
 }
 .first-content li:nth-of-type(2n+1){
     border-right: 1px solid #ccc;
+}
+.tipss{
+    text-align: center;
 }
 </style>

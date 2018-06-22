@@ -2,8 +2,8 @@
     <div class="mine">
         <div class="mine-header">
             <span class="iconfont icon-shezhi" @click="signout"></span>
-            <h1>我的717商城</h1>
-            <i class="iconfont icon-xiaoxi"></i>
+            <h1 @click="tips2">我的717商城</h1>
+            <i class="iconfont icon-xiaoxi" @click="tips3"></i>
         </div>
         <div class="mine-banner">
             <dl>
@@ -42,7 +42,7 @@
             <li><i class="iconfont icon-dizhiguanli"></i><span>地址管理</span><b>></b></li>
             <li><i class="iconfont icon-wodekefu"></i><span>我的客服</span><b>></b></li>
         </ul>
-        <Toast ref="toast">消息已发送成功！<p slot="2">消息已发送成功2！</p><p slot="3">消息已发送成功3！</p></Toast>
+        <Toast ref="toast">消息已发送成功！</Toast>
     </div>
 </template>
 <script>
@@ -55,10 +55,15 @@ export default {
     },
     methods:{
         signout(){
-            console.log(this.$refs.toast)
-            this.$refs.toast.active('消息已发送成功！')
-            this.$refs.toast.active('消息已发送成功2！')
-            this.$refs.toast.active('消息已发送成功3！')
+            this.$refs.toast.active('消息已发送成功！',{
+                timeout:3000
+            })
+        },
+        tips2(){
+            this.$refs.toast.active('我的717商城')
+        },
+        tips3(){
+            this.$refs.toast.active('消息中心')
         }
     }
 }
@@ -76,6 +81,8 @@ export default {
     position: relative;
 }
 .mine-header span{
+    display: inline-block;
+    width: 10%;
     position: absolute;
     line-height: 0.9rem;
     left: 10px;
@@ -87,11 +94,15 @@ export default {
     line-height: 0.9rem;
 }
 .mine-header i{
+    display: inline-block;
+    width: 10%;
+    text-align: center;
     position: absolute;
     line-height: 0.9rem;
     right: 10px;
     top: 0;
     font-size: .40rem;
+    z-index: 2;
 }
 .mine-banner{
     width: 100%;

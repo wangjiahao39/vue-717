@@ -17,6 +17,9 @@ export default {
         data:{
             required:true,
             type:Object
+        },
+        instance:{
+
         }
     },
     methods:{
@@ -32,7 +35,8 @@ export default {
                 data:this.data
             }).then(res=>{
                 if(res.code===1){
-                    console.log('添加成功')
+                    //this.instance.active('添加成功')
+                    this.$toastBus.$emit('toast','添加成功！')
                 }else{
                     console.log(res.msg)
                 }

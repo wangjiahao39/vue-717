@@ -1,37 +1,23 @@
 <template>
-    <div class="toast">
-        <div class="tips" v-show="isActive">{{msg}}<slot v-if="msg==''"></slot></div>
-        <div class="tips" v-show="isActive"><slot name="2"></slot></div>
-        <div class="tips" v-show="isActive"><slot name="3"></slot></div>
-    </div>
+    <div class="tips" v-show="isActive"><slot></slot></div>
 </template>
 <script>
 export default {
+    name:'toast-item',
     data(){
         return {
             isActive:false,
-            msg:''
+            timeout:2000
         }
     },
-    props:{
-        
-    },
-    watch:{
-        isActive(n,o){
-            if(n){
-                setTimeout(()=>{
-                    this.isActive = false
-                },2000)
-            }
-        }
-    },
-    methods:{
-        active(){
-            this.isActive = true
-        }
+    mounted(){
+        this.isActive = true
+        setTimeout(()=>{
+            this.isActive = false
+        },this.timeout)
     }
 }
 </script>
 <style>
-    @import './toast.css'
+    
 </style>

@@ -11,6 +11,12 @@ import Classify from '../pages/classify/classify'
 import Shopcar from '../pages/shopcar/shopcar'
 import Mine from '../pages/mine/mine'
 import {getCookie} from '../utils/utils'
+import Address from '../pages/address/address'
+import Addressnew from '../pages/address/addressnew'
+import Account from '../pages/account/account'
+import Topupway from '../pages/account/topupway'
+import Bill from '../pages/account/bill'
+import Setting from '../pages/setting/setting'
 
 Vue.use(Router)
 
@@ -56,9 +62,33 @@ let router = new Router({
             name: 'login',
             component: Login,
         },{
-            path:'/Register',
+            path:'/register',
             name:'register',
             component:Register
+        },{
+            path:'/address',
+            name:'address',
+            component:Address
+        },{
+            path:'/addressnew',
+            name:'addressnew',
+            component:Addressnew
+        },{
+            path:'/account',
+            name:'account',
+            component:Account
+        },{
+            path:'/topupway',
+            name:'topupway',
+            component:Topupway
+        },{
+            path:'/bill',
+            name:'bill',
+            component:Bill
+        },{
+            path:'/setting',
+            name:'setting',
+            component:Setting
         }
     ]
 })

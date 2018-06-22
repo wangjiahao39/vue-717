@@ -32,21 +32,23 @@
                 <dt><i class="iconfont icon-shouhoubaozhang"></i></dt>
                 <dd>售后</dd>
             </dl>
-            <dl>
+            <dl @click="ding">
                 <dt><i class="iconfont icon-aiguifanfile2"></i></dt>
                 <dd>我的订单</dd>
             </dl>
         </div>
         <ul class="mine-list">
-            <li><i class="iconfont icon-daifukuan"></i><span>账户余额</span><b>></b></li>
-            <li><i class="iconfont icon-dizhiguanli"></i><span>地址管理</span><b>></b></li>
+            <li @click="gotoaccount"><i class="iconfont icon-daifukuan"></i><span>账户余额</span><b>></b></li>
+            <li @click="gotoaddress"><i class="iconfont icon-dizhiguanli"></i><span>地址管理</span><b>></b></li>
             <li><i class="iconfont icon-wodekefu"></i><span>我的客服</span><b>></b></li>
         </ul>
         <Toast ref="toast">消息已发送成功！</Toast>
+        <Dialog ref="dialog">我的订单</Dialog>
     </div>
 </template>
 <script>
 import Toast from '../../plugins/toast/toast'
+import Dialog from '../../plugins/dialog/dialog'
 export default {
     data(){
         return {
@@ -58,12 +60,30 @@ export default {
             this.$refs.toast.active('消息已发送成功！',{
                 timeout:3000
             })
+            this.$router.push({
+                name:'setting'
+            })
         },
         tips2(){
             this.$refs.toast.active('我的717商城')
         },
         tips3(){
             this.$refs.toast.active('消息中心')
+        },
+        ding(){
+            this.$refs.dialog.active('我的订单',{
+                timeout:3000
+            })
+        },
+        gotoaddress(){
+            this.$router.push({
+                name:'address'
+            })
+        },
+        gotoaccount(){
+            this.$router.push({
+                name:'account'
+            })
         }
     }
 }

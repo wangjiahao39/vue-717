@@ -17,6 +17,12 @@ import Account from '../pages/account/account'
 import Topupway from '../pages/account/topupway'
 import Bill from '../pages/account/bill'
 import Setting from '../pages/setting/setting'
+import Myorder from '../pages/myorder/myorder'
+import OrderAll from '../pages/order-all/order-all'
+import OrderAfter from '../pages/order-after/order-after'
+import OrderObligation from '../pages/order-obligation/order-obligation'
+import OrderReceiving from '../pages/order-receiving/order-receiving'
+import OrderSend from '../pages/order-send/order-send'
 
 Vue.use(Router)
 
@@ -89,6 +95,33 @@ let router = new Router({
             path:'/setting',
             name:'setting',
             component:Setting
+        },{
+            path:'/myorder',
+            name:'myorder',
+            component:Myorder,
+            children:[
+                {
+                    path:'/order-all',
+                    name:'order-all',
+                    component:OrderAll
+                },{
+                    path:'/order-obligation',
+                    name:'order-obligation',
+                    component:OrderObligation
+                },{
+                    path:'/order-receiving',
+                    name:'order-receiving',
+                    component:OrderReceiving
+                },{
+                    path:'/order-send',
+                    name:'order-send',
+                    component:OrderSend
+                },{
+                    path:'/order-after',
+                    name:'order-after',
+                    component:OrderAfter
+                }
+            ]
         }
     ]
 })

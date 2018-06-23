@@ -16,23 +16,23 @@
             <span>我的店铺</span>
         </p>
         <div class="main-nav">
-            <dl>
+            <dl  @click="gotomyorder">
                 <dt><i class="iconfont icon-daifukuan"></i></dt>
                 <dd>待付款</dd>
             </dl>
-            <dl>
+            <dl  @click="gotomyorder">
                 <dt><i class="iconfont icon-daifahuo"></i></dt>
                 <dd>待发货</dd>
             </dl>
-            <dl>
+            <dl  @click="gotomyorder">
                 <dt><i class="iconfont icon-daishouhuo"></i></dt>
                 <dd>待收货</dd>
             </dl>
-            <dl>
+            <dl  @click="gotomyorder">
                 <dt><i class="iconfont icon-shouhoubaozhang"></i></dt>
                 <dd>售后</dd>
             </dl>
-            <dl @click="ding">
+            <dl @click="gotomyorder">
                 <dt><i class="iconfont icon-aiguifanfile2"></i></dt>
                 <dd>我的订单</dd>
             </dl>
@@ -43,7 +43,6 @@
             <li><i class="iconfont icon-wodekefu"></i><span>我的客服</span><b>></b></li>
         </ul>
         <Toast ref="toast">消息已发送成功！</Toast>
-        <Dialog ref="dialog">我的订单</Dialog>
     </div>
 </template>
 <script>
@@ -70,11 +69,6 @@ export default {
         tips3(){
             this.$refs.toast.active('消息中心')
         },
-        ding(){
-            this.$refs.dialog.active('我的订单',{
-                timeout:3000
-            })
-        },
         gotoaddress(){
             this.$router.push({
                 name:'address'
@@ -83,6 +77,11 @@ export default {
         gotoaccount(){
             this.$router.push({
                 name:'account'
+            })
+        },
+        gotomyorder(){
+            this.$router.push({
+                name:'myorder'
             })
         }
     }

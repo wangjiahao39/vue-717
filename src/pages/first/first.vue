@@ -8,7 +8,7 @@
                 <dd>我的店铺</dd>
             </dl>
             <dl>
-                <dt><img src="../../assets/images/shop.png" alt=""></dt>
+                <dt><i class="iconfont icon-xiaoxi"></i></dt>
                 <dd>消息</dd>
             </dl>
         </div>
@@ -67,8 +67,8 @@
 </template>
 <script>
 import Swiper from 'swiper'
-import GoodsItem from '../../components/goodsItem/goodsItem.vue'
 import 'swiper/dist/css/swiper.css'
+import GoodsItem from '../../components/goodsItem/goodsItem.vue'
 import jsonp from '../../utils/jsonp'
 export default {
     data(){

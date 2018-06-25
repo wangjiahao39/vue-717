@@ -101,23 +101,23 @@ let router = new Router({
             component:Myorder,
             children:[
                 {
-                    path:'/order-all',
+                    path:'order-all',
                     name:'order-all',
                     component:OrderAll
                 },{
-                    path:'/order-obligation',
+                    path:'order-obligation',
                     name:'order-obligation',
                     component:OrderObligation
                 },{
-                    path:'/order-receiving',
+                    path:'order-receiving',
                     name:'order-receiving',
                     component:OrderReceiving
                 },{
-                    path:'/order-send',
+                    path:'order-send',
                     name:'order-send',
                     component:OrderSend
                 },{
-                    path:'/order-after',
+                    path:'order-after',
                     name:'order-after',
                     component:OrderAfter
                 }

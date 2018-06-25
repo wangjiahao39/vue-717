@@ -3,15 +3,23 @@ const apilist = require('./apilist')
 const bodyParser = require('body-parser')
 let app = express();
 
+// const ejs = require('ejs')
+// app.engine('html',ejs.__express)
+// app.set('view engine','html')
+
 app.use(bodyParser.json())
 
 app.all('*',function(req,res,next){
     res.header({
-        'Access-Control-Allow-Origin':'http://localhost:8080',
+        'Access-Control-Allow-Origin':'http://localhost:8080',//cors
         'Access-Control-Allow-Headers':'Content-Type, Authorization'//支持多个请求头时，空格隔开
     })
     next()
 })
+// app.get('/index/',function(req,res,next){
+//     res.render('test',{title:'HTML'})
+// })
+
 apilist(app)
 
 app.listen('3000',function(){

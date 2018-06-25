@@ -5,14 +5,17 @@
  * @param msg string/component/node
  * 
  * @callback active 显示提示信息
+ *      @param msg string
+ *      @param options config
  * 
- * @param $toastBus toast组件专用的全局bus
+ * @instance $toastBus toast组件专用的全局bus
  * 
  * @event toast 显示提示信息
  * 
  */
 import './toast.css'
-import ToastItem from './toast.vue'
+import ToastItem from './toast.vue'//静态模块，优先加载
+
 let Toast = {
     install(Vue, options) {
         const toastBus = new Vue({})
@@ -35,6 +38,9 @@ let Toast = {
                     timeout: options.timeout
                 }
             },
+            created(){
+                //import ToastItem from './toast.vue'
+            },
             components:{
                 ToastItem
             },
@@ -56,4 +62,5 @@ let Toast = {
     }
 }
 
+//default 需要变量定义好之后才可以使用
 export default Toast

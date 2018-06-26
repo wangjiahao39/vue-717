@@ -9,16 +9,29 @@
             <li>用户名<span>路飞 ></span></li>
             <li>我的二维码<span>></span></li>
         </ul>
-        <button class="setting-btn">退出登录</button>
+        <button class="setting-btn" @click="exitLogin">退出登录</button>
+        <Toast/>
     </div>
 </template>
 <script>
+import {delCookie} from '../../utils/utils'
 export default {
     methods:{
         befomine(){
             this.$router.push({
                 name:'mine'
             })
+        },
+        exitLogin(){
+            if(confirm('您确定要退出吗?')){
+                delCookie('token')
+                this.$toastBus.$emit('toast','您已退出，即将返回首页')
+                setTimeout(()=>{
+                    this.$router.push({
+                        name:'first'
+                    })
+                },2000)
+            }
         }
     }
 }
@@ -59,12 +72,13 @@ export default {
 }
 .setting-btn{
     width: 70%;
-    height: 1rem;
+    height: .9rem;
     background: red;
     color: #fff;
     border: none;
-    border-radius: 1rem;
+    border-radius: .9rem;
     margin-left: 15%;
-    margin-top: 15%
+    margin-top: 15%;
+    outline: none;
 }
 </style>

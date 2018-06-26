@@ -31,7 +31,8 @@ httpInstance.interceptors.response.use((response)=>{
     }
 })
 
-export {httpInstance}
+const anotherInstance = axios.create({})
+export {httpInstance,anotherInstance}
 export default {
     install(Vue){
         Object.defineProperty(Vue.prototype,'$http',{

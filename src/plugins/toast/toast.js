@@ -2,6 +2,8 @@
  * @actionName Toast
  * 功能，提示条
  * 
+ * @component <Toast></Toast> 在制定容器内准备toast组件
+ * 
  * @param msg string/component/node
  * 
  * @callback active 显示提示信息

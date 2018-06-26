@@ -21,13 +21,19 @@
                 </dd>
             </dl>
             <p class="all-p">合计：￥114.00（运费：￥5.00）</p>
-            <p class="all-p"><button>转卖别人</button></p>
+            <p class="all-p"><button>转卖别人</button><button @click="gotoAfter">退款</button></p>
         </div>
     </div>
 </template>
 <script>
 export default {
-    
+    methods:{
+        gotoAfter(){
+            this.$router.push({
+                name:'after'
+            })
+        }
+    }
 }
 </script>
 <style>

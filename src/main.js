@@ -27,7 +27,8 @@ import Toast from './plugins/toast/toast'
 //import Toast from "j-toast";
 Vue.use(Toast, {
     name: 'Toast',
-    timeout:2000
+    timeout:2000,
+    autoclose:false
 })
 //应用自定义dialog组件
 import Dialog from './plugins/dialog/dialog'

@@ -21,7 +21,7 @@
                 </dd>
             </dl>
             <p class="all-p">合计：￥114.00（运费：￥5.00）</p>
-            <p class="all-p"><button>提醒卖家发货</button><button>申请退款</button></p>
+            <p class="all-p"><button @click="tixing">提醒卖家发货</button><button>申请退款</button></p>
         </div>
         <div class="all-list">
             <div class="all-name">
@@ -46,11 +46,17 @@
             <p class="all-p">合计：￥114.00（运费：￥5.00）</p>
             <p class="all-p"><button>查看物流</button><button>申请退货</button><button>确认收货</button></p>
         </div>
+        <Toast ref="toast">提醒卖家发货成功!</Toast>
     </div>
 </template>
 <script>
+import Toast from '../../plugins/toast/toast'
 export default {
-    
+    methods:{
+        tixing(){
+            this.$refs.toast.active('提醒卖家发货成功!')
+        }
+    }
 }
 </script>
 <style>

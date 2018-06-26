@@ -23,6 +23,7 @@ import OrderAfter from '../pages/order-after/order-after'
 import OrderObligation from '../pages/order-obligation/order-obligation'
 import OrderReceiving from '../pages/order-receiving/order-receiving'
 import OrderSend from '../pages/order-send/order-send'
+import After from '../pages/order-after/after'
 
 Vue.use(Router)
 
@@ -122,6 +123,10 @@ let router = new Router({
                     component:OrderAfter
                 }
             ]
+        },{
+            path:'after',
+            name:'after',
+            component:After
         }
     ]
 })

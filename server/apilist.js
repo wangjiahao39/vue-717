@@ -256,4 +256,57 @@ module.exports = function (app) {
             }
         })
     })
+
+    //添加收货地址
+    app.post('/api/addressnew',(req,res)=>{
+        console.log(req.body)
+        let addrlist = JSON.parse(fs.readFileSync(path.resolve(__dirname,'addr/addr.json'),'utf-8'))
+        jwt.verify(req.body.token,'1601E',(err,decoded)=>{
+            if(err){
+                res.json({
+                    code:0,
+                    msg:'登录超时，请重新登陆'
+                })
+            }else{
+                if(addrlist[decoded.username]){
+                    addrlist[decoded.username].push(req.body.data)
+                }else{
+                    addrlist[decoded.username] = [req.body.data]
+                }
+                fs.writeFile(path.resolve(__dirname,'addr/addr.json'),JSON.stringify(addrlist),function(error){
+                    if(error){
+                        res.json({
+                            code:0,
+                            msg:'服务器报错，请重新尝试',
+                            data:error
+                        })
+                    }else{
+                        res.json({
+                            code:1,
+                            msg:'添加成功'
+                        })
+                    }
+                })
+            }
+        })
+    })
+
+    //获取收货地址列表
+    app.post('/api/addrlist',(req,res)=>{
+        let addrlist = JSON.parse(fs.readFileSync(path.resolve(__dirname,'addr/addt,json'),'utf-8'))
+        jwt.verify(req.body.token,'1601E',(err,decoded)=>{
+            if(err){
+                res.json({
+                    code:0,
+                    msg:'登录超时，请重新登陆'
+                })
+            }else{
+                res.json({
+                    code:1,
+                    msg:'请求成功',
+                    data:addrlist[decoded.username]
+                })
+            }
+        })
+    })
 }

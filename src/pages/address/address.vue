@@ -4,9 +4,12 @@
             <b @click="beforemine">＜</b>
             <h1>地址管理</h1>
         </div>
-        <div class="address-list">
-            <h3>路飞 130****8036</h3>
-            <p>北京市海淀区知春路北京市海淀区知春路北京市海淀区知春路</p>
+        <div class="address-no" v-show="data.length==0">
+            <h2>您还没有添加地址</h2>
+        </div>
+        <div class="address-list" v-for="(item,index) in data" :key="index">
+            <h3>{{item.name}}{{item.phone}}</h3>
+            <p>{{item.city}}{{item.area}}{{item.province}}</p>
             <dl>
                 <dt>
                     <span :class="checkedClass" @click="check"></span>
@@ -22,12 +25,20 @@
     </div>
 </template>
 <script>
+import {getCookie} from '../../utils/utils'
 export default {
     data(){
         return {
+            data:[],
             flag:false,
             txt:'设为默认'
         }
+    },
+    created(){
+        this.$http.post('/api/addrlist',{token:getCookie('token')}).then(res=>{
+            console.log(res.data);
+            //this.data = res.data;
+        })
     },
     computed:{
         checkedClass(){
@@ -90,6 +101,14 @@ export default {
     text-align: center;
     line-height: .9rem;
     font-size: .32rem;
+}
+.address-no{
+    height: 2rem;
+    background: #fff;
+    text-align: center;
+}
+.address-no h2{
+    line-height: 2rem;
 }
 .address-list{
     background: #fff;

@@ -5,17 +5,36 @@
             <h1>设置</h1>
         </div>
         <ul class="setting-list">
-            <li>我的头像<span>></span></li>
-            <li>用户名<span>路飞 ></span></li>
-            <li>我的二维码<span>></span></li>
+            <li>
+                我的头像
+                <span>></span>
+                <span class="setting-img">
+                    <img :src="url" alt="">
+                    <input type="file" class="file-input" @change="fileimg">
+                </span>
+            </li>
+            <li>
+                用户名
+                <span>></span>
+                <span>路飞</span>
+            </li>
+            <li>
+                我的二维码
+                <span>></span>
+            </li>
         </ul>
         <button class="setting-btn" @click="exitLogin">退出登录</button>
         <Toast/>
     </div>
 </template>
 <script>
-import {delCookie} from '../../utils/utils'
+import {delCookie,getCookie} from '../../utils/utils'
 export default {
+    data(){
+        return {
+            url:'src/assets/images/head.png'
+        }
+    },
     methods:{
         befomine(){
             this.$router.push({
@@ -32,6 +51,15 @@ export default {
                     })
                 },2000)
             }
+        },
+        fileimg(e){
+            let fd = new FormData();
+            fd.append('images',e.target.files[0])
+            //console.log(fd)
+            this.$http.post('/api/upload',fd).then(res=>{
+                //console.log(res)
+                this.url = res.url
+            })
         }
     }
 }
@@ -67,8 +95,34 @@ export default {
     padding: 0 .3rem;
     border-bottom: 1px solid #ccc;
 }
-.setting-list span{
+.setting-list li span{
+    width: 0.9rem;
+    height: 0.9rem;
+    text-align: center;
     float: right;
+}
+.setting-img{
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    position: relative;
+}
+.setting-img img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: block;
+}
+.file-input{
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
 }
 .setting-btn{
     width: 70%;

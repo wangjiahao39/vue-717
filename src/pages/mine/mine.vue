@@ -6,7 +6,7 @@
             <i class="iconfont icon-xiaoxi" @click="tips3"></i>
         </div>
         <div class="mine-banner">
-            <dl>
+            <dl  @click="signout">
                 <dt><img src="../../assets/images/head.png" alt=""></dt>
                 <dd>路飞</dd>
             </dl>
@@ -46,8 +46,9 @@
     </div>
 </template>
 <script>
-import Toast from '../../plugins/toast/toast'
-import Dialog from '../../plugins/dialog/dialog'
+//前后台数据交互，数据分类型的：纯文本、json、formData（二进制）
+//application/json和application/x-www-form-urlencoded
+//multipartform-data
 export default {
     data(){
         return {

@@ -21,7 +21,7 @@ import ToastItem from './toast.vue'//静态模块，优先加载
 let Toast = {
     install(Vue, options) {
         const toastBus = new Vue({})
-        console.log(options)
+        //console.log(options)
         Object.defineProperty(Vue.prototype,"$toastBus",{
             value:toastBus
         })

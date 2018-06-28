@@ -40,8 +40,19 @@ export default {
         }
     },
     created(){
+        console.log(this.$route.query)
+        console.log(decodeURI(this.$route.query.province))
+        let {type,name,phone,street,city,area,province} = this.$route.query;
+        if(type == 'edit'){
+            this.name = name;
+            this.phone = phone;
+            this.street = street;
+            this.city = {name:city};
+            this.province = {name:decodeURI(province)};
+            this.area = area;
+        }
         anotherInstance.get('/server/pcrdata/pcr.json').then(res=>{
-            console.log(res.data);
+            //console.log(res.data);
             this.provlist = res.data;
         })
     },
@@ -82,7 +93,6 @@ export default {
                 token:getCookie('token'),
                 data
             }).then(res=>{
-                console.log(res)
                 if(res.code == '1'){
                     this.$toastBus.$emit('toast',res.msg)
                     setTimeout(()=>{

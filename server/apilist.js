@@ -1,8 +1,19 @@
-const fs = require('fs')
-const path = require('path')
-const jwt = require('jsonwebtoken')
-const root = path.resolve(__dirname)
-console.log(jwt)
+const fs = require('fs');
+const path = require('path');
+const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.resolve(__dirname + '/upload'))
+    },
+    filename: function (req, file, cb) {
+        console.log(file)
+        let n = file.originalname.split('.')
+        cb(null, n[0] + '-' + Date.now() + '.' + n[1])
+    }
+})
+const upload = multer({ storage: storage })
+//console.log(jwt)
 //定义接口
 module.exports = function (app) {
     //首页商品列表的接口
@@ -23,6 +34,7 @@ module.exports = function (app) {
     })
 
     const queryApi = require('./queryApi')
+
     //分类接口
     app.get('/api/classify', (req, res) => {
         queryApi(`/index.php?ctl=goods_class&act=ajaxGetClassList&cid=${req.query.cid}`).then(data => {
@@ -32,10 +44,10 @@ module.exports = function (app) {
 
     //注册接口
     app.post('/api/user/register', (req, res) => {
-        console.log(req.body)
+        //console.log(req.body)
         let userpath = path.resolve(__dirname + '/user')
         let userlist = JSON.parse(fs.readFileSync(userpath + '/userlist.json', 'utf-8'))
-        console.log(userlist)
+        //console.log(userlist)
         if (userlist.some(element => {
             return element.username == req.body.username
         })) {
@@ -61,6 +73,7 @@ module.exports = function (app) {
             }
         })
     })
+
     //登录接口
     app.post('/api/user/login', (req, res) => {
         let userpath = path.resolve(__dirname + '/user')
@@ -72,7 +85,7 @@ module.exports = function (app) {
             }
         })
         if (flag) {
-            let token = jwt.sign(req.body, '1601E', { expiresIn: 60*60 })
+            let token = jwt.sign(req.body, '1601E', { expiresIn: 60 * 60 })
             res.json({
                 msg: 'success',
                 code: 1,
@@ -95,161 +108,164 @@ module.exports = function (app) {
                     code: 0
                 })
             } else {
-                let goods = JSON.parse(fs.readFileSync(__dirname+'/shoplist/shoplist.json','utf-8'))
+                let goods = JSON.parse(fs.readFileSync(__dirname + '/shoplist/shoplist.json', 'utf-8'))
                 res.json({
                     msg: 'success',
                     code: 1,
-                    data:goods[decoded.username] || []
+                    data: goods[decoded.username] || []
                 })
             }
         })
     })
+
     //添加购物车
-    app.post('/api/addCar',(req,res)=>{
-        if(!req.body.token){
+    app.post('/api/addCar', (req, res) => {
+        if (!req.body.token) {
             res.json({
-                msg:'参数错误，必传字段，token缺失',
-                code:2
+                msg: '参数错误，必传字段，token缺失',
+                code: 2
             })
             return
         }
-        jwt.verify(req.body.token,'1601E',(err,decoded)=>{
-            if(err){
+        jwt.verify(req.body.token, '1601E', (err, decoded) => {
+            if (err) {
                 res.json({
-                    msg:'登录超时，请重新登陆',
-                    code:'0'
+                    msg: '登录超时，请重新登陆',
+                    code: '0'
                 })
-            }else{
-                const carpath = __dirname+'/shoplist/shoplist.json'
-                let shoplist = JSON.parse(fs.readFileSync(carpath,'utf-8'))
-                if(shoplist[decoded.username]){
+            } else {
+                const carpath = __dirname + '/shoplist/shoplist.json'
+                let shoplist = JSON.parse(fs.readFileSync(carpath, 'utf-8'))
+                if (shoplist[decoded.username]) {
                     let flag = false;//判断商品是否存在
-                    shoplist[decoded.username].forEach((item,index)=>{
-                        if(item.wname==req.body.data.wname){
+                    shoplist[decoded.username].forEach((item, index) => {
+                        if (item.wname == req.body.data.wname) {
                             ++item.count
                             flag = true
                         }
                     })
-                    if(!flag){
+                    if (!flag) {
                         let o = {
                             ...req.body.data,
-                            count:1
+                            count: 1
                         }
                         shoplist[decoded.username].push(o)
                     }
-                }else{
-                    shoplist[decoded.username] = [{count:1,...req.body.data}];
+                } else {
+                    shoplist[decoded.username] = [{ count: 1, ...req.body.data }];
                 }
-                fs.writeFile(carpath,JSON.stringify(shoplist),(err)=>{
-                    if(err){
+                fs.writeFile(carpath, JSON.stringify(shoplist), (err) => {
+                    if (err) {
                         res.json({
-                            msg:'写入错误',
-                            code:'0'
+                            msg: '写入错误',
+                            code: '0'
                         })
-                    }else{
+                    } else {
                         res.json({
-                            msg:'添加成功',
-                            code:1
+                            msg: '添加成功',
+                            code: 1
                         })
                     }
                 })
             }
         })
     })
+
     //删除购物车
-    app.post('/api/shopcar/del',(req,res)=>{
-        if(!req.body.token){
+    app.post('/api/shopcar/del', (req, res) => {
+        if (!req.body.token) {
             res.status(304)
             res.json({
-                msg:'参数错误，必传字段，token缺失',
-                code:2
+                msg: '参数错误，必传字段，token缺失',
+                code: 2
             })
             return
         }
-        jwt.verify(req.body.token,'1601E',(err,decoded)=>{
-            if(err){
+        jwt.verify(req.body.token, '1601E', (err, decoded) => {
+            if (err) {
                 res.json({
-                    msg:'登录超时，请重新登陆',
-                    code:'0'
+                    msg: '登录超时，请重新登陆',
+                    code: '0'
                 })
-            }else{
-                const carpath = __dirname+'/shoplist/shoplist.json'
-                let shoplist = JSON.parse(fs.readFileSync(carpath,'utf-8'))
+            } else {
+                const carpath = __dirname + '/shoplist/shoplist.json'
+                let shoplist = JSON.parse(fs.readFileSync(carpath, 'utf-8'))
                 let goodslist = shoplist[decoded.username]
                 //操作数据库
                 let delindex = []
-                goodslist = goodslist.forEach((item,index)=>{
-                    req.body.goodsname.forEach((v,i)=>{
-                        if(item.wname == v){
+                goodslist = goodslist.forEach((item, index) => {
+                    req.body.goodsname.forEach((v, i) => {
+                        if (item.wname == v) {
                             delindex.push(index)
                         }
                     })
                 })
-                for(let i=0;i<goodslist.length;i++){
-                    for(let j=0;j<delindex.length;j++){
-                        if(i==delindex[j]){
-                            goodslist.splice(i,1);
+                for (let i = 0; i < goodslist.length; i++) {
+                    for (let j = 0; j < delindex.length; j++) {
+                        if (i == delindex[j]) {
+                            goodslist.splice(i, 1);
                         }
                     }
                 }
-                goodslist.splice(delindex,1)
+                goodslist.splice(delindex, 1)
                 shoplist[decoded.username] = goodslist
-                
-                fs.writeFile(carpath,JSON.stringify(shoplist),(err)=>{
-                    if(err){
+
+                fs.writeFile(carpath, JSON.stringify(shoplist), (err) => {
+                    if (err) {
                         res.json({
-                            msg:'写入错误',
-                            code:'0'
+                            msg: '写入错误',
+                            code: '0'
                         })
-                    }else{
+                    } else {
                         res.json({
-                            msg:'删除成功',
-                            code:1
+                            msg: '删除成功',
+                            code: 1
                         })
                     }
                 })
             }
         })
     })
+
     //修改购物车数量
-    app.post('/api/shopcar/count',(req,res)=>{
-        if(!req.body.token){
+    app.post('/api/shopcar/count', (req, res) => {
+        if (!req.body.token) {
             res.status(304)
             res.json({
-                msg:'参数错误，必传字段，token缺失',
-                code:2
+                msg: '参数错误，必传字段，token缺失',
+                code: 2
             })
             return
         }
-        jwt.verify(req.body.token,'1601E',(err,decoded)=>{
-            if(err){
+        jwt.verify(req.body.token, '1601E', (err, decoded) => {
+            if (err) {
                 res.json({
-                    msg:'登录超时，请重新登陆',
-                    code:'0'
+                    msg: '登录超时，请重新登陆',
+                    code: '0'
                 })
-            }else{
-                const carpath = __dirname+'/shoplist/shoplist.json'
-                let shoplist = JSON.parse(fs.readFileSync(carpath,'utf-8'))
+            } else {
+                const carpath = __dirname + '/shoplist/shoplist.json'
+                let shoplist = JSON.parse(fs.readFileSync(carpath, 'utf-8'))
                 let goodslist = shoplist[decoded.username]
                 //操作数据库
-                goodslist = goodslist.map((item,index)=>{
-                    if(item.wname == req.body.goodsname){
+                goodslist = goodslist.map((item, index) => {
+                    if (item.wname == req.body.goodsname) {
                         item.count = req.body.count
                     }
                     return item
                 })
                 shoplist[decoded.username] = goodslist
-                
-                fs.writeFile(carpath,JSON.stringify(shoplist),(err)=>{
-                    if(err){
+
+                fs.writeFile(carpath, JSON.stringify(shoplist), (err) => {
+                    if (err) {
                         res.json({
-                            msg:'写入错误',
-                            code:'0'
+                            msg: '写入错误',
+                            code: '0'
                         })
-                    }else{
+                    } else {
                         res.json({
-                            msg:'修改成功',
-                            code:1
+                            msg: '修改成功',
+                            code: 1
                         })
                     }
                 })
@@ -258,32 +274,32 @@ module.exports = function (app) {
     })
 
     //添加收货地址
-    app.post('/api/addressnew',(req,res)=>{
-        console.log(req.body)
-        let addrlist = JSON.parse(fs.readFileSync(path.resolve(__dirname,'addr/addr.json'),'utf-8'))
-        jwt.verify(req.body.token,'1601E',(err,decoded)=>{
-            if(err){
+    app.post('/api/addressnew', (req, res) => {
+        //console.log(req.body)
+        let addrlist = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'addr/addr.json'), 'utf-8'))
+        jwt.verify(req.body.token, '1601E', (err, decoded) => {
+            if (err) {
                 res.json({
-                    code:0,
-                    msg:'登录超时，请重新登陆'
+                    code: 0,
+                    msg: '登录超时，请重新登陆'
                 })
-            }else{
-                if(addrlist[decoded.username]){
+            } else {
+                if (addrlist[decoded.username]) {
                     addrlist[decoded.username].push(req.body.data)
-                }else{
+                } else {
                     addrlist[decoded.username] = [req.body.data]
                 }
-                fs.writeFile(path.resolve(__dirname,'addr/addr.json'),JSON.stringify(addrlist),function(error){
-                    if(error){
+                fs.writeFile(path.resolve(__dirname, 'addr/addr.json'), JSON.stringify(addrlist), function (error) {
+                    if (error) {
                         res.json({
-                            code:0,
-                            msg:'服务器报错，请重新尝试',
-                            data:error
+                            code: 0,
+                            msg: '服务器报错，请重新尝试',
+                            data: error
                         })
-                    }else{
+                    } else {
                         res.json({
-                            code:1,
-                            msg:'添加成功'
+                            code: 1,
+                            msg: '添加成功'
                         })
                     }
                 })
@@ -292,21 +308,31 @@ module.exports = function (app) {
     })
 
     //获取收货地址列表
-    app.post('/api/addrlist',(req,res)=>{
-        let addrlist = JSON.parse(fs.readFileSync(path.resolve(__dirname,'addr/addt,json'),'utf-8'))
-        jwt.verify(req.body.token,'1601E',(err,decoded)=>{
-            if(err){
+    app.post('/api/addrlist', (req, res) => {
+        let addrlist = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'addr/addr.json'), 'utf-8'))
+        jwt.verify(req.body.token, '1601E', (err, decoded) => {
+            if (err) {
                 res.json({
-                    code:0,
-                    msg:'登录超时，请重新登陆'
+                    code: 0,
+                    msg: '登录超时，请重新登陆'
                 })
-            }else{
+            } else {
                 res.json({
-                    code:1,
-                    msg:'请求成功',
-                    data:addrlist[decoded.username]
+                    code: 1,
+                    msg: '请求成功',
+                    data: addrlist[decoded.username]
                 })
             }
+        })
+    })
+
+    //文件上传接口
+    app.post('/api/upload', upload.single('images'), (req, res) => {
+        console.log(req.file)
+        res.json({
+            code: 0,
+            msg: 'success',
+            url: 'http://localhost:3000/server/upload/' + req.file.filename
         })
     })
 }

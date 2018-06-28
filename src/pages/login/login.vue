@@ -4,6 +4,7 @@
         <p><label for="username">用户名</label><input type="text" id="sername" v-model="username"></p>
         <p><label for="password">密码</label><input type="password" id="password" v-model="password"></p>
         <button @click="goToLogin">登录</button>
+        <Toast></Toast>
     </div>
 </template>
 <script>
@@ -42,7 +43,7 @@ export default {
                         name:this.$route.query.from || 'home'
                     })
                 }else{
-                    console.log(res.msg)
+                    this.$toastBus.$emit('toast',res.msg)
                 }
             })
         },

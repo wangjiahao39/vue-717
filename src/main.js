@@ -30,11 +30,6 @@ Vue.use(Toast, {
     timeout:2000,
     autoclose:false
 })
-//应用自定义dialog组件
-import Dialog from './plugins/dialog/dialog'
-Vue.use(Dialog, {
-    name: 'Dialog'
-})
 
 new Vue({
     el: '#app',

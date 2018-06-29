@@ -16,6 +16,11 @@ const upload = multer({ storage: storage })
 //console.log(jwt)
 //定义接口
 module.exports = function (app) {
+
+    app.get('/', function (req, res, next) {
+        res.render('index', { title: 'HTML' })
+    })
+
     //首页商品列表的接口
     const goodsPath = path.resolve(__dirname + '/goodslist')
     app.get('/api/index/recommend.action', (req, res) => {
@@ -173,14 +178,14 @@ module.exports = function (app) {
 
     //删除购物车
     app.post('/api/shopcar/del', (req, res) => {
-        if (!req.body.token) {
-            res.status(304)
-            res.json({
-                msg: '参数错误，必传字段，token缺失',
-                code: 2
-            })
-            return
-        }
+        let {goodsname} = req.body
+        const carpath = __dirname + '/shoplist/shoplist.json'
+        let shoplist = JSON.parse(fs.readFileSync(carpath, 'utf-8'))
+        //let goodslist = shoplist[decoded.username]
+        //console.log(shoplist)
+        let al = []
+        al.push(shoplist)
+
         jwt.verify(req.body.token, '1601E', (err, decoded) => {
             if (err) {
                 res.json({
@@ -188,28 +193,20 @@ module.exports = function (app) {
                     code: '0'
                 })
             } else {
-                const carpath = __dirname + '/shoplist/shoplist.json'
-                let shoplist = JSON.parse(fs.readFileSync(carpath, 'utf-8'))
-                let goodslist = shoplist[decoded.username]
                 //操作数据库
                 let delindex = []
-                goodslist = goodslist.forEach((item, index) => {
-                    req.body.goodsname.forEach((v, i) => {
-                        if (item.wname == v) {
-                            delindex.push(index)
-                        }
-                    })
-                })
-                for (let i = 0; i < goodslist.length; i++) {
-                    for (let j = 0; j < delindex.length; j++) {
-                        if (i == delindex[j]) {
-                            goodslist.splice(i, 1);
-                        }
+                al.forEach((item, index) => {
+                    //console.log(item)
+                    if(item[decoded.username]){
+                        item[decoded.username].forEach((v, i) => {
+                            //console.log(v)
+                            if (goodsname.indexOf(v.wareId) === -1) {
+                                delindex.push(v)
+                            }
+                        })
+                        item[decoded.username] = delindex
                     }
-                }
-                goodslist.splice(delindex, 1)
-                shoplist[decoded.username] = goodslist
-
+                })
                 fs.writeFile(carpath, JSON.stringify(shoplist), (err) => {
                     if (err) {
                         res.json({

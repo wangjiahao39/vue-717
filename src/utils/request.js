@@ -3,21 +3,17 @@ import axios from 'axios'
 
 console.log(process.env.NODE_ENV)
 //测试服务器
-const testUrl = 'http://localhost:3000'
+const testUrl = 'http://169.254.52.61:3000'
 //线上服务器
-const onlineUrl = 'http:m.jd.com'
+const onlineUrl = 'http://169.254.52.61:3000' || 'http:m.jd.com'
 let httpInstance = axios.create({
     headers:{
         //'Content-Type':'application/x-www-form-urlencoded',
         'Content-Type':'application/json'
     },
-    baseURL:process.env.NODE_ENV==='development'?testUrl:onlineUrl
+    baseURL:process.env.NODE_ENV==='production'?onlineUrl:testUrl
 })
 httpInstance.interceptors.request.use((config)=>{
-    // console.log(config)
-    // if(config.url.indexOf('mine')>-1){
-    //     config.headers.Authorization = '123'
-    // }
     return config
 },(err)=>{
     console.log(err)

@@ -40,7 +40,8 @@ export default {
 			},
 			total:0,
 			type:'结算',
-			edit:'编辑'
+			edit:'编辑',
+			newArr:[]
         }
 	},
 	computed:{
@@ -50,19 +51,18 @@ export default {
 		}
 	},
     created(){
-		//this.fetchList()
 		this.$store.dispatch('fetchShoplist')
 	},
 	mounted(){
-		// bus.$on('update',()=>{
-		// 	console.log('update')
-		// 	this.fetchList()
-		// })
 		//从来都没有this.$on的写法
 		bus.$on('goodsCheaked',(data)=>{
-			console.log(data)
+			//console.log(data)
 			this.list[data.name] = data.price
 			this.sumup()
+		})
+		bus.$on('newarr',(arr)=>{
+			console.log(arr)
+			this.newArr = arr
 		})
 	},
     methods:{
@@ -110,17 +110,12 @@ export default {
 				//跳转支付平台
 			}else{
 				if(confirm('您确定要删除吗？')){
-					let arr = []
-					for(let i in this.list){
-						if(this.list[i]!=0){
-							arr.push(i)
-						}
-					}
 					this.$http.post('/api/shopcar/del',{
 						token:getCookie('token'),
-						goodsname:arr
+						goodsname:this.newArr
 					}).then(res=>{
 						console.log(res)
+						this.$refs.toast.active(res.msg)
 					})
 				}
 			}

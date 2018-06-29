@@ -24,7 +24,8 @@ export default {
     },
     data(){
         return {
-            flag:false
+            flag:false,
+            arr:[]
         }
     },
     mounted(){
@@ -32,6 +33,8 @@ export default {
             console.log(selected)
             this.flag = selected
         })
+        this.arr.push(this.data.wareId)
+        bus.$emit('newarr',this.arr)
     },
     computed:{
         checkedClass(){

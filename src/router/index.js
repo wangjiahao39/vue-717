@@ -7,8 +7,10 @@ import Register from '../pages/register/register'
 import Detail from '../pages/detail/detail'
 
 import First from '../pages/first/first'
-import Classify from '../pages/classify/classify'
-import Shopcar from '../pages/shopcar/shopcar'
+//import Classify from '../pages/classify/classify'
+const Classify = ()=>import(/*webpackChunkName:"Classify"*/'../pages/classify/classify')
+//import Shopcar from '../pages/shopcar/shopcar'
+const Shopcar = ()=>import(/*webpackChunkName:"Shopcar"*/'../pages/shopcar/shopcar')
 import Mine from '../pages/mine/mine'
 import {getCookie} from '../utils/utils'
 import Address from '../pages/address/address'

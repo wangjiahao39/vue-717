@@ -55,6 +55,7 @@
                     <dd>酒水饮料</dd>
                 </dl>
             </div>
+            <Banner></Banner>
             <ul class="first-content" ref="list">
                 <li v-for="(item,index) in list" :key="index">
                     <GoodsItem :data='item' :instance="$refs.addCartSuc"></GoodsItem>
@@ -66,10 +67,12 @@
     </div>
 </template>
 <script>
-import Swiper from 'swiper'
-import 'swiper/dist/css/swiper.css'
+//import Swiper from 'swiper'
+import '../../assets/swiper-3.4.2.min.js'
+import '../../assets/swiper-3.4.2.min.css'
 import GoodsItem from '../../components/goodsItem/goodsItem.vue'
 import jsonp from '../../utils/jsonp'
+import Banner from './banner'
 export default {
     data(){
         return {
@@ -105,11 +108,12 @@ export default {
         }
     },
     components:{
-        GoodsItem
+        GoodsItem,
+        Banner
     },
     mounted(){
         new Swiper(this.$refs.swiper,{
-            autoplay:true,
+            autoplay:1500,
             loop:true
         });
         this.$http(`/api/index/recommend.action?page=${this.page}`).then(res=>{
@@ -131,12 +135,14 @@ export default {
 .first{
     width: 100%;
     height: 100%;
+    background: #f6f6f6;
     display: flex;
     flex-direction: column;
 }
 .first-top{
     width: 100%;
     height: .88rem;
+    background: #fff;
     display: flex;
 }
 .first-top img{
@@ -169,6 +175,7 @@ export default {
 .banner{
     width: 100%;
     height: 3.6rem;
+    background: #fff;
     overflow-x: hidden;
     font-size: 0;
 }
@@ -177,7 +184,8 @@ export default {
 }
 .first-list{
     width: 100%;
-    margin-bottom: 10px;
+    background: #fff;
+    margin-bottom: 5px;
 }
 .first-list dl{
     display: inline-block;
@@ -199,8 +207,10 @@ export default {
 }
 .first-content{
     width: 100%;
+    background: #fff;
     border-top: 1px solid #ccc;
     box-sizing: border-box;
+    margin-top: 8px;
 }
 .first-content li{
     width: 50%;

@@ -6,6 +6,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
+    chunkFilename:'[name].bundle.js',
     filename: 'build.js'
   },
   module: {
@@ -55,12 +56,12 @@ module.exports = {
   },
   devtool: '#eval-source-map',
   plugins:[
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"development"'
-      },
-      'shop1601':JSON.stringify('happy learning')
-    })
+    // new webpack.DefinePlugin({//向js脚本中注入额外的变量或对象
+    //   'process.env': {
+    //     NODE_ENV: '"development"'
+    //   },
+    //   'shop1601':JSON.stringify('happy learning')
+    // })
   ]
 }
 

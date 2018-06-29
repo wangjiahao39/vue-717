@@ -5,6 +5,9 @@ import router from './router/index'
 //引用iconfont样式
 import './assets/icon/iconfont.css'
 import './assets/reset.css'
+//引用swiper组件
+import 'swiper/dist/css/swiper.css'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
 //引用数据请求模块
 import http from './utils/request'
 Vue.use(http)
